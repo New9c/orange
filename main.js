@@ -86,13 +86,22 @@ function gameOver() {
     setButtonsDisabled(false);
 }
 
+function getAttackImg() {
+    if (currentAttack == attack.Jump) return 'imgs/enemy/overhead/jump-1.png';
+    else if (currentAttack == attack.High) return 'imgs/enemy/overhead/jump-2.png';
+    else if (currentAttack == attack.Normal) return `imgs/enemy/normal/normal-${Math.floor(Math.random() * 4) + 1}.png`;
+    else if (currentAttack == attack.None) return `imgs/enemy/none/none-${Math.floor(Math.random() * 3) + 1}.png`;
+    else if (currentAttack == attack.Charge) return 'imgs/enemy/overhead/orange-1.png';
+    else if (currentAttack == attack.Orange) return 'imgs/enemy/overhead/orange-2.png';
+}
+
 function resetEnemy() {
     frame = 0;
     currentAttack = attack.None;
     attackList = [];
     enemyY = 0;
     enemyImg.style.transform = '';
-    enemyImg.src = 'imgs/enemy/idle.png';
+    enemyImg.src = getAttackImg();
     orange.className = '';
 }
 
@@ -187,30 +196,32 @@ function makeEnemyAttack() {
         moveFrames = 18;
         enemyY = -300;
         enemyImg.style.transform = `translateY(${enemyY}px)`;
-        enemyImg.src = 'imgs/enemy/overhead/jump-1.png';
+        enemyImg.src = getAttackImg();
     } else if (currentAttack == attack.High) {
         moveFrames = 10;
         enemyY = -300;
         enemyImg.style.transform = `translateY(${enemyY}px)`;
-        enemyImg.src = 'imgs/enemy/overhead/jump-2.png';
+        enemyImg.src = getAttackImg();
         sndAttack.currentTime = 0;
         sndAttack.play().catch(() => { });
     } else {
         if (enemyY) { enemyY = 0; enemyImg.style.transform = ''; }
         moveFrames = 10;
         if (currentAttack == attack.Normal) {
-            enemyImg.src = 'imgs/enemy/pauch.png';
+            moveFrames = 6 + Math.floor(Math.random() * 14)
+            enemyImg.src = getAttackImg();
             sndAttack.currentTime = 0;
             sndAttack.play().catch(() => { });
             if (gameState === 'playing') score++;
         } else if (currentAttack == attack.None) {
-            enemyImg.src = 'imgs/enemy/idle.png';
+            moveFrames = 10 + Math.floor(Math.random() * 10)
+            enemyImg.src = getAttackImg();
         } else if (currentAttack == attack.Charge) {
             moveFrames = 18;
-            enemyImg.src = 'imgs/enemy/overhead/orange-1.png';
+            enemyImg.src = getAttackImg();
             playSound('sounds/charge.wav');
         } else if (currentAttack == attack.Orange) {
-            enemyImg.src = 'imgs/enemy/overhead/orange-2.png';
+            enemyImg.src = getAttackImg();
             sndAttack.currentTime = 0;
             sndAttack.play().catch(() => { });
             if (gameState === 'playing') score++;
