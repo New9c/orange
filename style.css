@@ -1,0 +1,81 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #555;
+    color: #fff;
+    font-family: monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#container {
+    text-align: center;
+}
+
+#game {
+    position: relative;
+    width: 900px;
+    height: 700px;
+    margin-bottom: 1rem;
+}
+
+#score {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-size: 1.5rem;
+}
+
+#block {
+    position: absolute;
+    left: 80px;
+    bottom: 0;
+}
+
+#orange {
+    position: absolute;
+    top: -110px;
+    left: 20px;
+    display: none;
+}
+
+#orange.active {
+    display: block;
+}
+
+#enemy {
+    position: absolute;
+    right: 80px;
+    bottom: 0;
+}
+
+#controls {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+#controls button {
+    background: #444;
+    color: #fff;
+    border: 1px solid #777;
+    padding: 0.4rem 1rem;
+    font: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#controls button:hover:not(:disabled) {
+    background: #555;
+}
+
+#controls button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
