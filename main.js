@@ -106,12 +106,12 @@ function gameOver() {
 }
 
 function getAttackImg() {
-    if (currentAttack == attack.Jump) return 'imgs/enemy/overhead/jump-1.png';
-    else if (currentAttack == attack.High) return 'imgs/enemy/overhead/jump-2.png';
-    else if (currentAttack == attack.Normal) return `imgs/enemy/normal/normal-${Math.floor(Math.random() * 4) + 1}.png`;
-    else if (currentAttack == attack.None) return `imgs/enemy/none/none-${Math.floor(Math.random() * 3) + 1}.png`;
-    else if (currentAttack == attack.Charge) return 'imgs/enemy/overhead/orange-1.png';
-    else if (currentAttack == attack.Orange) return 'imgs/enemy/overhead/orange-2.png';
+    if (currentAttack == attack.Jump) return `imgs/enemy/jump/${Math.floor(Math.random() * 3) + 1}.png`;
+    else if (currentAttack == attack.High) return `imgs/enemy/overhead/${Math.floor(Math.random() * 3) + 1}.png`;
+    else if (currentAttack == attack.Normal) return `imgs/enemy/normal/${Math.floor(Math.random() * 4) + 1}.png`;
+    else if (currentAttack == attack.None) return `imgs/enemy/none/${Math.floor(Math.random() * 4) + 1}.png`;
+    else if (currentAttack == attack.Charge) return 'imgs/enemy/orange/orange-1.png';
+    else if (currentAttack == attack.Orange) return 'imgs/enemy/orange/orange-2.png';
 }
 
 function resetEnemy() {
@@ -211,8 +211,8 @@ function fillAttackList() {
     if (choice <= 0.65)
         attackList = options[Math.random() <= 0.5 ? 0 : 1];
     else if (choice <= 0.95)
-        attackList = options[Math.random() <= 0.6 ? 2 : 3];
-    else attackList = options[Math.random() <= 0.6 ? 4 : 5];
+        attackList = options[Math.random() <= 0.8 ? 2 : 3];
+    else attackList = options[Math.random() <= 0.8 ? 4 : 5];
 }
 
 function makeEnemyAttack() {
