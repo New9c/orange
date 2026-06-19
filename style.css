@@ -7,7 +7,9 @@
 body {
     background: #555;
     color: #fff;
-    font-family: monospace;
+    font-family: "Comic Relief", system-ui;
+    font-weight: 700;
+    font-style: normal;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -61,7 +63,8 @@ body {
     justify-content: center;
 }
 
-#controls button {
+#controls button,
+#Github {
     background: #444;
     color: #fff;
     border: 1px solid #777;
@@ -69,9 +72,11 @@ body {
     font: inherit;
     font-size: 1rem;
     cursor: pointer;
+    text-decoration: none;
 }
 
-#controls button:hover:not(:disabled) {
+#controls button:hover:not(:disabled),
+#Github:hover {
     background: #555;
 }
 
