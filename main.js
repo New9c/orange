@@ -17,6 +17,16 @@ popupOverlay.addEventListener('click', e => {
 const ACTIVE_FRAMES = 2;
 let target = ' ';
 let binding = false;
+const keyDisplay = {
+    ' ': '␣',
+    'Backspace': '⌫',
+    'Tab': '⇥',
+    'ArrowUp': '↑',
+    'ArrowDown': '↓',
+    'ArrowLeft': '←',
+    'ArrowRight': '→',
+    'Enter': '↵',
+};
 
 let frame = 0;
 let moveFrames = 10;
@@ -32,8 +42,6 @@ let currentAttack = attack.None;
 let attackList = [];
 let enemyY = 0;
 
-const sndAttack = new Audio('sounds/hitHurt.wav');
-const sndHit = new Audio('sounds/explosion.wav');
 let hitPlayed = false;
 
 let gameState = 'idle';
@@ -55,7 +63,7 @@ startBtn.addEventListener('click', () => {
 function setButtonsDisabled(disabled) {
     startBtn.disabled = disabled;
     bindBtn.disabled = disabled;
-    if (!disabled) bindBtn.textContent = `Main Btn: ${target}`;
+    if (!disabled) bindBtn.textContent = `Block Btn: ${keyDisplay[target] || target}`;
 }
 
 function startCountdown() {
@@ -122,6 +130,7 @@ function isHit() {
 }
 
 document.addEventListener('keydown', e => {
+    if (binding || e.key === target) e.preventDefault();
     if (binding) { bindKey(e.key); return; }
     if (!e.repeat) { buttons.add(e.key); update(); }
 });
@@ -171,7 +180,7 @@ function bindKey(key) {
     target = key;
     binding = false;
     gpBindingDone = false;
-    bindBtn.textContent = `Main Btn: ${target}`;
+    bindBtn.textContent = `Block Btn: ${keyDisplay[target] || target}`;
     update();
 }
 
@@ -194,13 +203,16 @@ function fillAttackList() {
         [attack.None, attack.Normal],
         [attack.Normal],
         [attack.Jump, attack.High, attack.None],
+        [attack.Jump, attack.None, attack.None],
         [attack.Charge, attack.Orange, attack.None],
+        [attack.Charge, attack.None, attack.None],
     ];
-    const choice = Math.floor(Math.random() * 20)
-    if (choice < 8) attackList = options[0];
-    else if (choice < 15) attackList = options[1];
-    else if (choice < 19) attackList = options[2];
-    else attackList = options[3];
+    const choice = Math.random()
+    if (choice <= 0.65)
+        attackList = options[Math.random() <= 0.5 ? 0 : 1];
+    else if (choice <= 0.95)
+        attackList = options[Math.random() <= 0.6 ? 2 : 3];
+    else attackList = options[Math.random() <= 0.6 ? 4 : 5];
 }
 
 function makeEnemyAttack() {
@@ -210,26 +222,24 @@ function makeEnemyAttack() {
     if (currentAttack == attack.Jump) {
         moveFrames = 18;
         enemyY = -300;
-        enemyImg.style.transform = `translateY(${enemyY}px)`;
         enemyImg.src = getAttackImg();
+        enemyImg.style.transform = `translateY(${enemyY}px)`;
     } else if (currentAttack == attack.High) {
         moveFrames = 10;
         enemyY = -300;
-        enemyImg.style.transform = `translateY(${enemyY}px)`;
         enemyImg.src = getAttackImg();
-        sndAttack.currentTime = 0;
-        sndAttack.play().catch(() => { });
+        enemyImg.style.transform = `translateY(${enemyY}px)`;
+        playSound('sounds/hitHurt.wav');
     } else {
         if (enemyY) { enemyY = 0; enemyImg.style.transform = ''; }
         moveFrames = 10;
         if (currentAttack == attack.Normal) {
-            moveFrames = 6 + Math.floor(Math.random() * 14)
+            moveFrames = 6 + Math.floor(Math.random() * 12)
             enemyImg.src = getAttackImg();
-            sndAttack.currentTime = 0;
-            sndAttack.play().catch(() => { });
+            playSound('sounds/hitHurt.wav');
             if (gameState === 'playing') score++;
         } else if (currentAttack == attack.None) {
-            moveFrames = 10 + Math.floor(Math.random() * 10)
+            moveFrames = 10
             enemyImg.src = getAttackImg();
         } else if (currentAttack == attack.Charge) {
             moveFrames = 18;
@@ -237,8 +247,7 @@ function makeEnemyAttack() {
             playSound('sounds/charge.wav');
         } else if (currentAttack == attack.Orange) {
             enemyImg.src = getAttackImg();
-            sndAttack.currentTime = 0;
-            sndAttack.play().catch(() => { });
+            playSound('sounds/hitHurt.wav');
             if (gameState === 'playing') score++;
         }
     }
@@ -264,10 +273,7 @@ function tick(time) {
             if (isHit() && !hitPlayed) {
                 hitPlayed = true;
                 if (gameState === 'playing') gameOver();
-                setTimeout(() => {
-                    sndHit.currentTime = 0;
-                    sndHit.play().catch(e => console.log('audio err:', e));
-                }, 50);
+                setTimeout(() => playSound('sounds/explosion.wav'), 50);
             } else if (!isHit()) {
                 hitPlayed = false;
             }
