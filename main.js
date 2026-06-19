@@ -64,6 +64,7 @@ graphicsBtn.addEventListener('click', () => {
 });
 
 startBtn.addEventListener('click', () => {
+    if (!window.assetsReady) return;
     if (gameState !== 'idle' && gameState !== 'gameover') return;
     startCountdown();
 });
