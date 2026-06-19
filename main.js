@@ -5,6 +5,7 @@ const bindBtn = document.getElementById('bind');
 const startBtn = document.getElementById('start');
 const scoreEl = document.getElementById('score');
 const orange = document.getElementById('orange');
+const graphicsBtn = document.getElementById('graphics');
 const hintBtn = document.getElementById('hint');
 const popupOverlay = document.getElementById('popup-overlay');
 const popupClose = document.getElementById('popup-close');
@@ -46,6 +47,7 @@ let hitPlayed = false;
 
 let gameState = 'idle';
 let score = 0;
+let simpleGraphics = false;
 
 bindBtn.addEventListener('click', () => {
     if (gameState === 'playing' || gameState === 'countdown') return;
@@ -53,6 +55,12 @@ bindBtn.addEventListener('click', () => {
     gpBindingDone = false;
     bindBtn.textContent = 'Binding...';
     pollGamepads();
+});
+
+graphicsBtn.addEventListener('click', () => {
+    simpleGraphics = !simpleGraphics;
+    graphicsBtn.textContent = `Graphics: ${simpleGraphics ? 'Normal' : 'Wacky'}`;
+    enemyImg.src = getAttackImg();
 });
 
 startBtn.addEventListener('click', () => {
@@ -63,7 +71,11 @@ startBtn.addEventListener('click', () => {
 function setButtonsDisabled(disabled) {
     startBtn.disabled = disabled;
     bindBtn.disabled = disabled;
-    if (!disabled) bindBtn.textContent = `Block Btn: ${keyDisplay[target] || target}`;
+    graphicsBtn.disabled = disabled;
+    if (!disabled) {
+        bindBtn.textContent = `Block Btn: ${keyDisplay[target] || target}`;
+        graphicsBtn.textContent = `Graphics: ${simpleGraphics ? 'Normal' : 'Wacky'}`;
+    }
 }
 
 function startCountdown() {
@@ -106,6 +118,14 @@ function gameOver() {
 }
 
 function getAttackImg() {
+    if (simpleGraphics) {
+        if (currentAttack == attack.Jump) return 'imgs/enemy/jump/1.png';
+        else if (currentAttack == attack.High) return 'imgs/enemy/overhead/1.png';
+        else if (currentAttack == attack.Normal) return 'imgs/enemy/normal/1.png';
+        else if (currentAttack == attack.None) return 'imgs/enemy/none/1.png';
+        else if (currentAttack == attack.Charge) return 'imgs/enemy/orange/orange-1.png';
+        else if (currentAttack == attack.Orange) return 'imgs/enemy/orange/orange-2.png';
+    }
     if (currentAttack == attack.Jump) return `imgs/enemy/jump/${Math.floor(Math.random() * 7) + 1}.png`;
     else if (currentAttack == attack.High) return `imgs/enemy/overhead/${Math.floor(Math.random() * 7) + 1}.png`;
     else if (currentAttack == attack.Normal) return `imgs/enemy/normal/${Math.floor(Math.random() * 9) + 1}.png`;
