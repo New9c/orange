@@ -14,21 +14,38 @@ for (let i = 1; i <= 7; i++) images.push(`imgs/enemy/overhead/${i}.png`);
 for (let i = 1; i <= 9; i++) images.push(`imgs/enemy/normal/${i}.png`);
 for (let i = 1; i <= 5; i++) images.push(`imgs/enemy/none/${i}.png`);
 
+const sounds = [
+    'sounds/321.wav',
+    'sounds/charge.wav',
+    'sounds/explosion.wav',
+    'sounds/Go.wav',
+    'sounds/hitHurt.wav',
+];
+
 let loaded = 0;
-const total = images.length;
+const total = images.length + sounds.length;
 const loaderScoreEl = document.getElementById('score');
 
 loaderScoreEl.textContent = `Loading... 0/${total}`;
 
+function onLoad() {
+    loaded++;
+    loaderScoreEl.textContent = `Loading... ${loaded}/${total}`;
+    if (loaded === total) {
+        window.assetsReady = true;
+        loaderScoreEl.textContent = 'Score: 0';
+    }
+}
+
 images.forEach(src => {
     const img = new Image();
-    img.onload = img.onerror = () => {
-        loaded++;
-        loaderScoreEl.textContent = `Loading... ${loaded}/${total}`;
-        if (loaded === total) {
-            window.assetsReady = true;
-            loaderScoreEl.textContent = 'Score: 0';
-        }
-    };
+    img.onload = img.onerror = onLoad;
     img.src = src;
+});
+
+sounds.forEach(src => {
+    const audio = new Audio();
+    audio.oncanplaythrough = audio.onerror = onLoad;
+    audio.src = src;
+    audio.load();
 });
