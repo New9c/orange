@@ -5,6 +5,15 @@ const bindBtn = document.getElementById('bind');
 const startBtn = document.getElementById('start');
 const scoreEl = document.getElementById('score');
 const orange = document.getElementById('orange');
+const hintBtn = document.getElementById('hint');
+const popupOverlay = document.getElementById('popup-overlay');
+const popupClose = document.getElementById('popup-close');
+
+hintBtn.addEventListener('click', () => popupOverlay.classList.remove('hidden'));
+popupClose.addEventListener('click', () => popupOverlay.classList.add('hidden'));
+popupOverlay.addEventListener('click', e => {
+    if (e.target === popupOverlay) popupOverlay.classList.add('hidden');
+});
 const ACTIVE_FRAMES = 2;
 let target = ' ';
 let binding = false;

@@ -84,3 +84,41 @@ body {
     opacity: 0.4;
     cursor: default;
 }
+
+#popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#popup-overlay.hidden {
+    display: none;
+}
+
+#popup {
+    background: #444;
+    border: 1px solid #777;
+    padding: 2rem;
+}
+
+#popup p {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+#popup button {
+    background: #444;
+    color: #fff;
+    border: 1px solid #777;
+    padding: 0.4rem 1rem;
+    font: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#popup button:hover {
+    background: #555;
+}
