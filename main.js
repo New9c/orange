@@ -42,7 +42,9 @@ let score = 0;
 bindBtn.addEventListener('click', () => {
     if (gameState === 'playing' || gameState === 'countdown') return;
     binding = true;
+    gpBindingDone = false;
     bindBtn.textContent = 'Binding...';
+    pollGamepads();
 });
 
 startBtn.addEventListener('click', () => {
@@ -127,6 +129,7 @@ document.addEventListener('keyup', e => {
     buttons.delete(e.key); update();
 });
 
+window.addEventListener('DOMContentLoaded', () => pollGamepads());
 window.addEventListener('gamepadconnected', () => pollGamepads());
 window.addEventListener('gamepaddisconnected', () => { buttons.clear(); update(); });
 
@@ -147,16 +150,19 @@ function pollGamepads() {
             else { buttons.delete(k + '-'); buttons.delete(k + '+'); }
         });
     }
-    update();
     if (binding && !gpBindingDone) {
         for (const gp of gamepads) {
             if (!gp) continue;
             for (let i = 0; i < gp.buttons.length; i++) {
                 if (gp.buttons[i].pressed) { gpBindingDone = true; bindKey(`GP${gp.index}:B${i}`); break; }
             }
+            if (gpBindingDone) break;
+            for (let i = 0; i < gp.axes.length; i++) {
+                const val = gp.axes[i];
+                if (Math.abs(val) > 0.5) { gpBindingDone = true; bindKey(`GP${gp.index}:A${i}${val < 0 ? '-' : '+'}`); break; }
+            }
         }
     }
-    if (active) requestAnimationFrame(pollGamepads);
 }
 
 document.addEventListener('blur', () => { buttons.clear(); update(); });
@@ -244,6 +250,7 @@ let lastTick = 0;
 function tick(time) {
     if (time - lastTick >= 1000 / 60) {
         lastTick = time;
+        pollGamepads();
         update();
 
         if (gameState === 'playing') {
