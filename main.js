@@ -9,13 +9,42 @@ const graphicsBtn = document.getElementById('graphics');
 const hintBtn = document.getElementById('hint');
 const popupOverlay = document.getElementById('popup-overlay');
 const popupClose = document.getElementById('popup-close');
+const settingsOverlay = document.getElementById('settings-overlay');
+const settingsClose = document.getElementById('settings-close');
+const settingsBtn = document.getElementById('settings-btn');
 
-hintBtn.addEventListener('click', () => popupOverlay.classList.remove('hidden'));
+hintBtn.addEventListener('click', () => {
+    settingsOverlay.classList.add('hidden');
+    popupOverlay.classList.remove('hidden');
+});
 popupClose.addEventListener('click', () => popupOverlay.classList.add('hidden'));
 popupOverlay.addEventListener('click', e => {
     if (e.target === popupOverlay) popupOverlay.classList.add('hidden');
 });
-const ACTIVE_FRAMES = 2;
+settingsBtn.addEventListener('click', () => settingsOverlay.classList.remove('hidden'));
+settingsClose.addEventListener('click', () => settingsOverlay.classList.add('hidden'));
+settingsOverlay.addEventListener('click', e => {
+    if (e.target === settingsOverlay) settingsOverlay.classList.add('hidden');
+});
+let activeFrames = 2;
+const activeFramesInput = document.getElementById('active-frames');
+let overheadFrames = 18;
+const overheadFramesInput = document.getElementById('overhead-frames');
+let orangeProb = 5;
+let jumpyProb = 30;
+const orangeProbInput = document.getElementById('orange-prob');
+const jumpyProbInput = document.getElementById('jumpy-prob');
+const normalProbEl = document.getElementById('normal-prob');
+let jumpAttackProb = 80;
+const jumpAttackInput = document.getElementById('jump-attack-prob');
+const faintProbEl = document.getElementById('faint-prob');
+let orangeAttackProb = 80;
+const orangeAttackInput = document.getElementById('orange-attack-prob');
+const orangeFaintProbEl = document.getElementById('orange-faint-prob');
+let normalFramesMin = 6;
+let normalFramesMax = 18;
+const normalFramesMinInput = document.getElementById('normal-frames-min');
+const normalFramesMaxInput = document.getElementById('normal-frames-max');
 let target = ' ';
 let binding = false;
 const keyDisplay = {
@@ -57,9 +86,85 @@ bindBtn.addEventListener('click', () => {
     pollGamepads();
 });
 
+const modeBtn = document.getElementById('mode');
+const customSettings = document.getElementById('custom-settings');
+let playItYourWay = false;
+
+modeBtn.addEventListener('click', () => {
+    playItYourWay = !playItYourWay;
+    modeBtn.textContent = playItYourWay ? 'Play it Your Way' : 'Default';
+    customSettings.classList.toggle('disabled', !playItYourWay);
+    if (!playItYourWay) {
+        activeFrames = 2;
+        activeFramesInput.value = 2;
+        overheadFrames = 18;
+        overheadFramesInput.value = 18;
+        orangeProb = 5;
+        orangeProbInput.value = 5;
+        jumpyProb = 30;
+        jumpyProbInput.value = 30;
+        normalProbEl.textContent = 65;
+        jumpAttackProb = 80;
+        jumpAttackInput.value = 80;
+        faintProbEl.textContent = 20;
+        orangeAttackProb = 80;
+        orangeAttackInput.value = 80;
+        orangeFaintProbEl.textContent = 20;
+        normalFramesMin = 6;
+        normalFramesMinInput.value = 6;
+        normalFramesMax = 18;
+        normalFramesMaxInput.value = 18;
+    }
+});
+
+customSettings.classList.add('disabled');
+
+activeFramesInput.addEventListener('input', () => {
+    activeFrames = Math.min(5, Math.max(1, Number(activeFramesInput.value)));
+    activeFramesInput.value = activeFrames;
+});
+
+overheadFramesInput.addEventListener('input', () => {
+    overheadFrames = Math.max(1, Number(overheadFramesInput.value));
+    overheadFramesInput.value = overheadFrames;
+});
+
+function updateProbs() {
+    orangeProb = Math.max(0, Math.min(100 - jumpyProb, Number(orangeProbInput.value)));
+    orangeProbInput.value = orangeProb;
+    jumpyProb = Math.max(0, Math.min(100 - orangeProb, Number(jumpyProbInput.value)));
+    jumpyProbInput.value = jumpyProb;
+    normalProbEl.textContent = 100 - orangeProb - jumpyProb;
+}
+
+orangeProbInput.addEventListener('input', updateProbs);
+jumpyProbInput.addEventListener('input', updateProbs);
+
+jumpAttackInput.addEventListener('input', () => {
+    jumpAttackProb = Math.max(0, Math.min(100, Number(jumpAttackInput.value)));
+    jumpAttackInput.value = jumpAttackProb;
+    faintProbEl.textContent = 100 - jumpAttackProb;
+});
+
+orangeAttackInput.addEventListener('input', () => {
+    orangeAttackProb = Math.max(0, Math.min(100, Number(orangeAttackInput.value)));
+    orangeAttackInput.value = orangeAttackProb;
+    orangeFaintProbEl.textContent = 100 - orangeAttackProb;
+});
+
+normalFramesMinInput.addEventListener('input', () => {
+    normalFramesMin = Math.min(normalFramesMax, Math.max(1, Number(normalFramesMinInput.value)));
+    normalFramesMinInput.value = normalFramesMin;
+});
+
+normalFramesMaxInput.addEventListener('input', () => {
+    normalFramesMax = Math.max(normalFramesMin, Number(normalFramesMaxInput.value));
+    normalFramesMaxInput.value = normalFramesMax;
+});
+
 graphicsBtn.addEventListener('click', () => {
     simpleGraphics = !simpleGraphics;
-    graphicsBtn.textContent = `Graphics: ${simpleGraphics ? 'Normal' : 'Wacky'}`;
+    graphicsBtn.textContent = simpleGraphics ? 'Normal' : 'Wacky';
     enemyImg.src = getAttackImg();
 });
 
@@ -71,12 +176,7 @@ startBtn.addEventListener('click', () => {
 
 function setButtonsDisabled(disabled) {
     startBtn.disabled = disabled;
-    bindBtn.disabled = disabled;
-    graphicsBtn.disabled = disabled;
-    if (!disabled) {
-        bindBtn.textContent = `Block Btn: ${keyDisplay[target] || target}`;
-        graphicsBtn.textContent = `Graphics: ${simpleGraphics ? 'Normal' : 'Wacky'}`;
-    }
+    settingsBtn.disabled = disabled;
 }
 
 function startCountdown() {
@@ -147,7 +247,7 @@ function resetEnemy() {
 
 function isHit() {
     const blockingLow = buttons.has(target);
-    return frame <= ACTIVE_FRAMES && ((currentAttack == attack.High && blockingLow) || (currentAttack == attack.Normal && !blockingLow) || (currentAttack == attack.Orange && blockingLow))
+    return frame <= activeFrames && ((currentAttack == attack.High && blockingLow) || (currentAttack == attack.Normal && !blockingLow) || (currentAttack == attack.Orange && blockingLow))
 }
 
 document.addEventListener('keydown', e => {
@@ -201,7 +301,7 @@ function bindKey(key) {
     target = key;
     binding = false;
     gpBindingDone = false;
-    bindBtn.textContent = `Block Btn: ${keyDisplay[target] || target}`;
+    bindBtn.textContent = keyDisplay[target] || target;
     update();
 }
 
@@ -228,12 +328,15 @@ function fillAttackList() {
         [attack.Charge, attack.Orange, attack.None],
         [attack.Charge, attack.None, attack.None],
     ];
+    const orangeThreshold = orangeProb / 100;
+    const jumpyThreshold = (orangeProb + jumpyProb) / 100;
     const choice = Math.random()
-    if (choice <= 0.65)
+    if (choice <= orangeThreshold)
+        attackList = options[Math.random() <= orangeAttackProb / 100 ? 4 : 5];
+    else if (choice <= jumpyThreshold)
+        attackList = options[Math.random() <= jumpAttackProb / 100 ? 2 : 3];
+    else
         attackList = options[Math.random() <= 0.5 ? 0 : 1];
-    else if (choice <= 0.95)
-        attackList = options[Math.random() <= 0.8 ? 2 : 3];
-    else attackList = options[Math.random() <= 0.8 ? 4 : 5];
 }
 
 function makeEnemyAttack() {
@@ -241,7 +344,7 @@ function makeEnemyAttack() {
     currentAttack = attackList.shift();
     document.getElementById('orange').className = currentAttack == attack.Orange ? 'active' : '';
     if (currentAttack == attack.Jump) {
-        moveFrames = 18;
+        moveFrames = overheadFrames;
         enemyY = -300;
         enemyImg.src = getAttackImg();
         enemyImg.style.transform = `translateY(${enemyY}px)`;
@@ -255,7 +358,7 @@ function makeEnemyAttack() {
         if (enemyY) { enemyY = 0; enemyImg.style.transform = ''; }
         moveFrames = 10;
         if (currentAttack == attack.Normal) {
-            moveFrames = 6 + Math.floor(Math.random() * 12)
+            moveFrames = normalFramesMin + Math.floor(Math.random() * (normalFramesMax - normalFramesMin + 1))
             enemyImg.src = getAttackImg();
             playSound('sounds/hitHurt.wav');
             if (gameState === 'playing') score++;
@@ -263,7 +366,7 @@ function makeEnemyAttack() {
             moveFrames = 10
             enemyImg.src = getAttackImg();
         } else if (currentAttack == attack.Charge) {
-            moveFrames = 18;
+            moveFrames = overheadFrames;
             enemyImg.src = getAttackImg();
             playSound('sounds/charge.wav');
         } else if (currentAttack == attack.Orange) {

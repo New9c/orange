@@ -85,7 +85,8 @@ body {
     cursor: default;
 }
 
-#popup-overlay {
+#popup-overlay,
+#settings-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
@@ -94,23 +95,27 @@ body {
     align-items: center;
 }
 
-#popup-overlay.hidden {
+#popup-overlay.hidden,
+#settings-overlay.hidden {
     display: none;
 }
 
-#popup {
+#popup,
+#settings-popup {
     background: #444;
     border: 1px solid #777;
     padding: 3rem;
-    max-width: 600px;
+    width: 700px;
 }
 
-#popup p {
+#popup p,
+#settings-popup p {
     margin-bottom: 1rem;
     font-size: 1.2rem;
 }
 
-#popup button {
+#popup button,
+#settings-popup button {
     background: #444;
     color: #fff;
     border: 1px solid #777;
@@ -125,6 +130,190 @@ body {
     margin: 2rem auto 0 auto;
 }
 
-#popup button:hover {
+#settings-close {
+    display: block;
+    margin: 2rem auto 0 auto;
+}
+
+#bind-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+#bind-row span {
+    font-size: 1.2rem;
+}
+
+#graphics-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+#graphics-row span {
+    font-size: 1.2rem;
+}
+
+#active-frames-row,
+#overhead-frames-row,
+#normal-frames-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+#active-frames-row>span,
+#overhead-frames-row>span,
+#normal-frames-row>span {
+    font-size: 1.2rem;
+}
+
+#active-frames-row .range-values,
+#overhead-frames-row .range-values,
+#normal-frames-row .range-values {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+#active-frames-row .range-values input,
+#overhead-frames-row .range-values input,
+#normal-frames-row .range-values input {
+    width: 4rem;
+    background: #555;
+    color: #fff;
+    border: 1px solid #777;
+    padding: 0.4rem;
+    font: inherit;
+    font-size: 1rem;
+    text-align: center;
+}
+
+#active-frames-row .range-values input:disabled,
+#overhead-frames-row .range-values input:disabled,
+#normal-frames-row .range-values input:disabled {
+    opacity: 0.4;
+}
+
+#custom-settings.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+#custom-settings {
+    margin-top: 1rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid #777;
+}
+
+#prob-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+#prob-row>span {
+    font-size: 1.2rem;
+}
+
+#prob-row .prob-values {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+#prob-row .prob-values input {
+    width: 4rem;
+    background: #555;
+    color: #fff;
+    border: 1px solid #777;
+    padding: 0.3rem;
+    font: inherit;
+    font-size: 1rem;
+    text-align: center;
+}
+
+#prob-row .prob-values input:disabled {
+    opacity: 0.4;
+}
+
+#jump-attack-row,
+#orange-attack-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+#jump-attack-row>span,
+#orange-attack-row>span {
+    font-size: 1.2rem;
+}
+
+#jump-attack-row .prob-values,
+#orange-attack-row .prob-values {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+#jump-attack-row .prob-values input,
+#orange-attack-row .prob-values input {
+    width: 4rem;
+    background: #555;
+    color: #fff;
+    border: 1px solid #777;
+    padding: 0.3rem;
+    font: inherit;
+    font-size: 1rem;
+    text-align: center;
+}
+
+#jump-attack-row .prob-values input:disabled,
+#orange-attack-row .prob-values input:disabled {
+    opacity: 0.4;
+}
+
+#mode-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+#mode-row span {
+    font-size: 1.2rem;
+}
+
+#frames-hint {
+    font-size: 1.2rem;
+    margin: 1rem 0
+}
+
+#hint-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+#hint-row span {
+    font-size: 1.2rem;
+}
+
+#popup button:hover,
+#settings-popup button:hover {
     background: #555;
 }

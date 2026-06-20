@@ -22,9 +22,7 @@
         </div>
         <div id="controls">
             <button id="start">Start</button>
-            <button id="bind">Block Btn: ␣</button>
-            <button id="graphics">Graphics: Wacky</button>
-            <button id="hint">How to Play</button>
+            <button id="settings-btn">Settings</button>
             <a href="https://github.com/New9c/orange" id="Github">GitHub</a>
         </div>
     </div>
@@ -40,6 +38,72 @@
             <p>Despite being on the ground, dude may charge up the ultimate attack: ORANGE.
                 You have to react as you would to a jumpy attack, look out for ORANGE!</p>
             <button id="popup-close">Oki</button>
+        </div>
+    </div>
+    <div id="settings-overlay">
+        <div id="settings-popup">
+            <div id="bind-row">
+                <span>Block Button:</span>
+                <button id="bind">␣</button>
+            </div>
+            <div id="graphics-row">
+                <span>Graphics:</span>
+                <button id="graphics">Wacky</button>
+            </div>
+            <div id="mode-row">
+                <span>Mode:</span>
+                <button id="mode">Default</button>
+            </div>
+            <div id="custom-settings">
+                <div id="frames-hint">(1 second = 60 Frames)</div>
+                <div id="prob-row">
+                    <span>ORANGE / Jumpy / Normal</span>
+                    <span class="prob-values">
+                        <input type="number" id="orange-prob" value="5" min="0">% /
+                        <input type="number" id="jumpy-prob" value="30" min="0">% /
+                        <span id="normal-prob">65</span>%
+                    </span>
+                </div>
+                <div id="jump-attack-row">
+                    <span>Jump Attack / Faint</span>
+                    <span class="prob-values">
+                        <input type="number" id="jump-attack-prob" value="80" min="0">% /
+                        <span id="faint-prob">20</span>%
+                    </span>
+                </div>
+                <div id="orange-attack-row">
+                    <span>ORANGE Attack / Faint</span>
+                    <span class="prob-values">
+                        <input type="number" id="orange-attack-prob" value="80" min="0">% /
+                        <span id="orange-faint-prob">20</span>%
+                    </span>
+                </div>
+                <div id="normal-frames-row">
+                    <span>Normal Frames:</span>
+                    <span class="range-values">
+                        <input type="number" id="normal-frames-min" value="6" min="1"> Frames ~
+                        <input type="number" id="normal-frames-max" value="18" min="1"> Frames
+                    </span>
+                </div>
+                <div id="overhead-frames-row">
+                    <span>Overhead Frames:</span>
+                    <span class="range-values">
+                        <input type="number" id="overhead-frames" value="18" min="1"> Frames
+                    </span>
+                </div>
+                <div id="active-frames-row">
+                    <span>Active Frames:</span>
+                    <span class="range-values">
+                        <input type="number" id="active-frames" value="2" min="1" max="5"> Frames
+                    </span>
+                </div>
+            </div>
+            <div id="hint-row">
+                <span>(New here?</span>
+                <button id="hint">How to Play</button>
+                <span>)</span>
+            </div>
+            <button id="settings-close">Oki</button>
         </div>
     </div>
     <script src="loader.js"></script>
